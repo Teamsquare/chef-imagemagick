@@ -3,21 +3,21 @@ include_recipe 'apt'
 
 package 'libmagickwand-dev'
 
-remote_file "#{Chef::Config[:file_cache_path]}/ImageMagick-7.0.4-2.tar.gz" do
-  source "https://www.imagemagick.org/download/ImageMagick-7.0.4-2.tar.gz"
+remote_file "#{Chef::Config[:file_cache_path]}/ImageMagick.tar.gz" do
+  source "https://www.imagemagick.org/download/ImageMagick.tar.gz"
 end
 
 bash 'untar_imagemagick' do
   cwd "#{Chef::Config[:file_cache_path]}"
 
   code <<-EOH
-    tar -xzvf ImageMagick-7.0.4-2.tar.gz
+    mkdir ImageMagick && tar -xzvf ImageMagick.tar.gz -C ImageMagick --strip-components=1
   EOH
-  not_if { ::File.directory?("#{Chef::Config['file_cache_path'] || '/tmp'}/ImageMagick-7.0.4-2") }
+  not_if { ::File.directory?("#{Chef::Config['file_cache_path'] || '/tmp'}/ImageMagick") }
 end
 
 bash 'install-imagemagick' do
-  cwd "#{Chef::Config[:file_cache_path]}/ImageMagick-7.0.4-2"
+  cwd "#{Chef::Config[:file_cache_path]}/ImageMagick"
 
   code <<-EOH
     ./configure
